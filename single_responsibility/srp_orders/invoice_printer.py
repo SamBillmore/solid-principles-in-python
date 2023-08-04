@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 class InvoicePrinter:
-    WIDTH = 40
+    WIDTH = 50
 
     def __init__(self, order, invoice_calculator):
         self.order = order
@@ -14,7 +14,10 @@ class InvoicePrinter:
 
     @property
     def _invoice_number(self):
-        return "INV-" + self.order.order_id.replace('_', '-')
+        return "INV-" + self.order.order_id.replace('_', '/')
+    
+    def _display_sales_tax(self):
+        return self.invoice_calculator.SALES_TAX * 100
 
     def print(self):
         bar = '-' * self.WIDTH
@@ -27,7 +30,7 @@ class InvoicePrinter:
             {self.order.item_name} | {self.order.amount}
             {bar}
             {self._format_value('Sub Total', self.invoice_calculator.amount)}
-            {self._format_value(f'Sales Tax ({self.invoice_calculator.SALES_TAX}%)',
+            {self._format_value(f'Sales Tax ({self._display_sales_tax()}%)',
                                self.invoice_calculator.sales_tax)}
             {self._format_value('Card Fees', self.invoice_calculator.card_fees)}
             {self._format_value('Total', self.invoice_calculator.total)}
